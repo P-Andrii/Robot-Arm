@@ -47,7 +47,7 @@ void gripper(){
 }
 
 void inverse_kinematics(float horiz, float high, int& alpha, int& beta) {
-  hypotenuse = sqrt(horiz*horiz + high*high);
+  float hypotenuse = sqrt(horiz*horiz + high*high);
   // The angle for the first servo motor is divided into 2: the angle between the horizontal and the line between the base and the claw, and the angle between the said line and the first segment of the arm
   // The first angle alpha1 is found through the tangent of the input parameters
   // The second angle alpha2 is found through the rule of cosines
@@ -55,7 +55,7 @@ void inverse_kinematics(float horiz, float high, int& alpha, int& beta) {
   float alpha2 = 57.3 * acos( (hypotenuse*hypotenuse + seg_1*seg_1 - seg_2*seg_2) / (2*seg_1*hypotenuse) );
   alpha = alpha1 + alpha2;
   // Beta is the angle between the first and second segments of the arm
-  beta = 57.3 * acos( (seg_1*seg_1 + seg_2*seg_2 - hypotenuse*hypotenuse)/(2*seg_1*seg_2) )
+  beta = 57.3 * acos( (seg_1*seg_1 + seg_2*seg_2 - hypotenuse*hypotenuse)/(2*seg_1*seg_2) );
 }
 
 void setup() {
@@ -78,7 +78,6 @@ void loop() {
   horiz = horiz*3/4 + analogRead(A1)/4;
   high = high*3/4 + analogRead(A0)/4;
   inverse_kinematics(horiz, high, alpha, beta);
-  Serial.println(String(alpha1)+ "   " + String(len)); // Debug printout
   
   s1.write(alpha);
   // Sanity check: if trying to go underground - don't
